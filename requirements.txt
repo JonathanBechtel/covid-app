@@ -12,3 +12,14 @@ dash-html-components==1.0.2
 dash-renderer==1.2.4
 dash-table==4.6.1
 mysql-connector-python==8.0.16
+Cython>=0.22
+cmdstanpy==0.9.5
+numpy>=1.15.4
+pandas>=1.0.4
+matplotlib>=2.0.0
+LunarCalendar>=0.0.9
+convertdate>=2.1.2
+holidays>=0.10.2
+setuptools-git>=1.2
+python-dateutil>=2.8.0
+tqdm>=4.36.1
