@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 this is the file that runs EVERY night at 10:00 PM EST to pull in new Covid data and build predictions
 from it
@@ -125,6 +124,7 @@ def build_prophet_preds(data_url: str,
     
     test_df = test_df.append(pd.Series(series_vals,  index=index_vals), ignore_index=True)
     test_df['model'] = 'Prophet'
+    test_df['date']  = np.datetime64('now')
     
     return test_df
 

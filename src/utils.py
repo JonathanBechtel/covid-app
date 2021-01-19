@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 helper functions to get dashboard to work better
 """
@@ -55,7 +54,8 @@ def add_to_db(df: DataFrame, table_name: str, connection_str: str) -> None:
             'day5_date': types.Date(),
             'day6_date': types.Date(),
             'day7_date': types.Date(),
-            'model': types.String()
+            'model': types.String(),
+            'dt': types.Date()
             }
     
     engine = create_engine(connection_str)
