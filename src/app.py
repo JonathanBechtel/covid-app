@@ -29,12 +29,12 @@ dcc_options = [{'label': 'New Cases', 'value': 'positiveIncrease'},
 
 dcc_mapping = {'positiveIncrease': 'positive',
                'hospitalizedIncrease': 'hospitalized',
-               'deathIncrease': 'death', 
+               'deathIncrease': 'death',
                'totalTestResultsIncrease': 'totalTestResults'}
 
 
 # this is where you specify how the application will render itself
-app.layout = dbc.Container(id='main-container', 
+app.layout = dbc.Container(id='main-container',
              children=[html.Div(children=[
              html.H2("Up To Date Covid19 Data"),
              dbc.Row([
@@ -50,14 +50,14 @@ app.layout = dbc.Container(id='main-container',
                   dbc.Col(dcc.Graph(id='main-chart'), width=9),
                   dbc.Col(dcc.Graph(id='output'), width=3)
             ]),
-             dcc.Slider(id    = 'single-date-slider', 
-                       min    = convert_to_int(data['date'].min()), 
-                       max    = convert_to_int(data['date'].max()), 
+             dcc.Slider(id    = 'single-date-slider',
+                       min    = convert_to_int(data['date'].min()),
+                       max    = convert_to_int(data['date'].max()),
                        value  = convert_to_int(data['date'].max()),
                        step   = 2592000,
                        marks  = develop_tick_marks('day', data['date'].min(), data['date'].max(), interval=30)),
              ])])
-             
+
 ### Below the Layout We're Going to Create Callbacks
 @app.callback(Output('main-chart', 'figure'),
               [Input('metric-dropdown', 'value'),
@@ -128,13 +128,9 @@ def render_data(clickData, marks, time_val, cumulative):
             fill_color='lavender',
             align='left'))
             ])
-            
+
     figure.update_layout(geo=dict(bgcolor= 'rgba(0,0,0,0)'),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)')
-    
+
     return figure
-    
-             
-if __name__ == '__main__':
-    app.run_server(debug=False, use_reloader=False)
