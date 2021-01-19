@@ -10,10 +10,10 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import json
-from utils import develop_tick_marks, convert_to_int
+from utils import develop_tick_marks, convert_to_int, create_connection_string
 import dash_bootstrap_components as dbc
-
-stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+from sqlalchemy import create_engine
+import pickle
 
 # this initializes the application
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
@@ -21,6 +21,18 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
 # we'll load in our data here at the very beginning
 data = pd.read_csv('https://api.covidtracking.com/v1/states/daily.csv', parse_dates=['date'])
 data.sort_values(by='date', inplace=True)
+
+# load in our connection info
+with open('info.pkl', 'rb') as info:
+    connection_info = pickle.load(info)
+    
+connection_string = create_connection_string(connection_info)
+    
+engine            = create_engine(connection_string)
+
+# and get our database info
+with engine.connect() as connection:
+    db_df = pd.read_sql_query('SELECT * FROM jonathanbechtel$covid.predictions ORDER BY dt DESC LIMIT 57', con=connection)
 
 dcc_options = [{'label': 'New Cases', 'value': 'positiveIncrease'},
                {'label': 'New Hospitalizations', 'value': 'hospitalizedIncrease'},
@@ -37,6 +49,7 @@ dcc_mapping = {'positiveIncrease': 'positive',
 app.layout = dbc.Container(id='main-container',
              children=[html.Div(children=[
              html.H2("Up To Date Covid19 Data"),
+             html.Div(id='db_div', children=[json.dumps(db_df)]),
              dbc.Row([
                 dbc.Col(dcc.Dropdown(id='metric-dropdown', options=dcc_options, value='positiveIncrease', clearable=False), width=7),
                 dbc.Col(dcc.Checklist(id='cumulative',
@@ -50,12 +63,21 @@ app.layout = dbc.Container(id='main-container',
                   dbc.Col(dcc.Graph(id='main-chart'), width=9),
                   dbc.Col(dcc.Graph(id='output'), width=3)
             ]),
+<<<<<<< HEAD
              dcc.Slider(id    = 'single-date-slider',
                        min    = convert_to_int(data['date'].min()),
                        max    = convert_to_int(data['date'].max()),
                        value  = convert_to_int(data['date'].max()),
                        step   = 2592000,
                        marks  = develop_tick_marks('day', data['date'].min(), data['date'].max(), interval=30)),
+=======
+             dcc.Slider(id    = 'single-date-slider', 
+                        min   = convert_to_int(data['date'].min()), 
+                        max   = convert_to_int(data['date'].max()), 
+                        value = convert_to_int(data['date'].max()),
+                        step  = 2592000,
+                        marks = develop_tick_marks('day', data['date'].min(), data['date'].max(), interval=30)),
+>>>>>>> 9bc6826b892bb6462ec11fc7c4770eab9a55a73f
              ])])
 
 ### Below the Layout We're Going to Create Callbacks
@@ -106,7 +128,7 @@ def render_data(clickData, marks, time_val, cumulative):
             align='left',
             ))])
         figure.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)')
+        plot_bgcolor = 'rgba(0,0,0,0)')
         return figure
     else:
         state = clickData['points'][0]['location']
@@ -132,5 +154,9 @@ def render_data(clickData, marks, time_val, cumulative):
     figure.update_layout(geo=dict(bgcolor= 'rgba(0,0,0,0)'),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)')
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 9bc6826b892bb6462ec11fc7c4770eab9a55a73f
     return figure
