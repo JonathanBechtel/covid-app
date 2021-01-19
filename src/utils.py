@@ -69,3 +69,6 @@ def add_to_db(df: DataFrame, table_name: str, connection_str: str) -> None:
     except Exception as e:
         print(f"Failed because: {e}")
         
+def create_connection_string(info_dict: dict) -> str:
+    return f"{info_dict['driver']}://{info_dict['username']}:{info_dict['password']}@{info_dict['host']}:{info_dict['port']}/{info_dict['database']}"
+        
